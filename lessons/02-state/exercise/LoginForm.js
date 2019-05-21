@@ -8,8 +8,24 @@ import { login } from "app/utils"
 // export default LoginFormFinal
 
 export default function LoginForm() {
+  let [checked, setChecked] = useState(false)
+  let [loading, setLoading] = useState(false)
+  let [error, setError] = useState(null)
+
   return (
-    <form>
+    <form
+      onSubmit={async event => {
+        event.preventDefault()
+        setLoading(true)
+        setError(null)
+        let [emailNode, passwordNode] = event.target.elements
+        try {
+          await login(emailNode.value, passwordNode.value)
+        } catch (e) {
+          setError(e.message)
+        }
+      }}
+    >
       <VisuallyHidden>
         <label htmlFor="login:email">Email:</label>
       </VisuallyHidden>
@@ -25,7 +41,7 @@ export default function LoginForm() {
       </VisuallyHidden>
       <input
         id="login:password"
-        type="password"
+        type={checked ? "text" : "password"}
         className="inputField"
         placeholder="Password"
       />
@@ -34,8 +50,11 @@ export default function LoginForm() {
         <label>
           <input
             className="passwordCheckbox"
+            onChange={() => {
+              setChecked(!checked)
+            }}
             type="checkbox"
-            defaultChecked={false}
+            defaultChecked={checked}
           />{" "}
           show password
         </label>
@@ -43,8 +62,18 @@ export default function LoginForm() {
 
       <TabsButton>
         <FaSignInAlt />
-        <span>Login</span>
+        <span>{loading ? "Loading" : "Login"}</span>
       </TabsButton>
+      {error && (
+        <p
+          style={{
+            color: "red",
+            marginBottom: 0
+          }}
+        >
+          {error}
+        </p>
+      )}
     </form>
   )
 }
