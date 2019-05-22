@@ -33,7 +33,7 @@ export function DayField(props) {
   }
 
   return (
-    <select value={value} onChange={handleChange}>
+    <select value={value} onChange={handleChange} {...props}>
       {days.map((_, index) => (
         <option key={index} value={index + 1}>
           {index < 9 ? "0" : ""}
@@ -54,7 +54,7 @@ export function MonthField(props) {
   }
 
   return (
-    <select value={month} onChange={handleChange}>
+    <select value={month} onChange={handleChange} {...props}>
       <option value="0">01</option>
       <option value="1">02</option>
       <option value="2">03</option>
@@ -72,7 +72,7 @@ export function MonthField(props) {
 }
 
 export function YearField(props) {
-  const { start, end } = props
+  const { start, end, ...rest } = props
   const { date, onChange } = useContext(DatesFieldContext)
   const difference = end - start + 1
   const years = Array.from({ length: difference }).map(
@@ -85,7 +85,7 @@ export function YearField(props) {
   }
 
   return (
-    <select value={date.getFullYear()} onChange={handleChange}>
+    <select value={date.getFullYear()} onChange={handleChange} {...rest}>
       {years.map(year => (
         <option key={year}>{year}</option>
       ))}
